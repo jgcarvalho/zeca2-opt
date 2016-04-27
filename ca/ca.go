@@ -3,6 +3,7 @@ package ca
 import (
 	"fmt"
 	"math/rand"
+	"time"
 
 	"github.com/jgcarvalho/zeca2-opt/bayes"
 	"github.com/jgcarvalho/zeca2-opt/rule"
@@ -20,6 +21,7 @@ type Config struct {
 }
 
 func (conf Config) Run(rule rule.Rule) (bayes.PriorPatterns, bayes.Likelihood) {
+	rand.Seed(time.Now().UTC().UnixNano())
 	priorPatterns := make(map[[3]string]map[[3]string]float64)
 	likelihood := make(map[string]map[[3]string]map[[3]string]float64)
 	var init, end, previous, current []string
@@ -73,24 +75,34 @@ func step(previous, current, init, end *[]string, ru *rule.Rule, priorP *(map[[3
 			}
 		}
 		(*current)[c] = state
+		// if (*previous)[c-1] == "###" {
+		// 	fmt.Println((*ru)[rule.Pattern{(*previous)[c-1], (*previous)[c], (*previous)[c+1]}])
+		// }
+		if state == "" || state == " " {
+			fmt.Println("ERRO", (*previous)[c-1], (*previous)[c], (*previous)[c+1])
+		}
+		// } else {
+		// 	fmt.Println("OK", (*previous)[c-1], (*previous)[c], (*previous)[c+1], state)
+		// }
 
 		// prior patterns probabilities
 		patAA = [3]string{(*previous)[c-1][0:1], (*previous)[c][0:1], (*previous)[c+1][0:1]}
-		if len((*previous)[c-1]) == 3 {
-			patSS[0] = (*previous)[c-1][1:3]
-		} else {
-			patSS[0] = "##"
-		}
-		if len((*previous)[c]) == 3 {
-			patSS[1] = (*previous)[c][1:3]
-		} else {
-			patSS[1] = "##"
-		}
-		if len((*previous)[c+1]) == 3 {
-			patSS[2] = (*previous)[c+1][1:3]
-		} else {
-			patSS[2] = "##"
-		}
+		patSS = [3]string{(*previous)[c-1][1:3], (*previous)[c][1:3], (*previous)[c+1][1:3]}
+		// if len((*previous)[c-1]) == 3 {
+		// 	patSS[0] = (*previous)[c-1][1:3]
+		// } else {
+		// 	patSS[0] = "##"
+		// }
+		// if len((*previous)[c]) == 3 {
+		// 	patSS[1] = (*previous)[c][1:3]
+		// } else {
+		// 	patSS[1] = "##"
+		// }
+		// if len((*previous)[c+1]) == 3 {
+		// 	patSS[2] = (*previous)[c+1][1:3]
+		// } else {
+		// 	patSS[2] = "##"
+		// }
 		if _, ok := (*priorP)[patAA]; !ok {
 			(*priorP)[patAA] = make(map[[3]string]float64)
 		}

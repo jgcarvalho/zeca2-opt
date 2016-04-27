@@ -77,10 +77,11 @@ def print_static_rules(aa):
                 n = len(states)
                 count = 1
                 for i in states:
-                    if i == "??":
-                        print "{} : {}".format(aa[1]+i, 1.0),
-                    else:
-                        print "{} : {}".format(aa[1]+i, 0.0),
+                    print "{} : {}".format(aa[1]+i, 1.0/len(states)),
+                    # if i == "??":
+                    #     print "{} : {}".format(aa[1]+i, 1.0),
+                    # else:
+                    #     print "{} : {}".format(aa[1]+i, 0.0),
                     if count != n:
                         print ",",
                     count += 1
@@ -91,10 +92,11 @@ def print_static_rules(aa):
                 n = len(states)
                 count = 1
                 for i in states:
-                    if i == "??":
-                        print "{} : {}".format(aa[1]+i, 1.0),
-                    else:
-                        print "{} : {}".format(aa[1]+i, 0.0),
+                    print "{} : {}".format(aa[1]+i, 1.0/len(states)),
+                    # if i == "??":
+                    #     print "{} : {}".format(aa[1]+i, 1.0),
+                    # else:
+                    #     print "{} : {}".format(aa[1]+i, 0.0),
                     if count != n:
                         print ",",
                     count += 1

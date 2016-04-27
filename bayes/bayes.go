@@ -113,32 +113,25 @@ func CalcLikelihood(l map[string]map[[3]string]map[[3]string]float64) Likelihood
 
 func UpdateRule(r *rule.Rule, pS *PriorStates2, pP *PriorPatterns, like *Likelihood) {
 	var posteriori float64
+	var parcial float64
 	for p := range *r {
+		parcial = 0.0
 		for s := range (*r)[p] {
 			posteriori = (*pS)[s[0:1]][s[1:3]] // * like/pP
-			if len(p[0]) == 3 && len(p[1]) == 3 && len(p[2]) == 3 {
-				posteriori *= (*like)[s][[3]string{p[0][0:1], p[1][0:1], p[2][0:1]}][[3]string{p[0][1:3], p[1][1:3], p[2][1:3]}]
-				posteriori /= (*pP)[[3]string{p[0][0:1], p[1][0:1], p[2][0:1]}][[3]string{p[0][1:3], p[1][1:3], p[2][1:3]}]
-			} else {
-				if len(p[1]) < 3 {
-					// # no meio
-					continue
-				} else if len(p[0]) < 3 && len(p[2]) < 3 {
-					posteriori *= (*like)[s][[3]string{p[0][0:1], p[1][0:1], p[2][0:1]}][[3]string{"##", p[1][1:3], "##"}]
-					posteriori /= (*pP)[[3]string{p[0][0:1], p[1][0:1], p[2][0:1]}][[3]string{"##", p[1][1:3], "##"}]
-				} else if len(p[0]) < 3 {
-					posteriori *= (*like)[s][[3]string{p[0][0:1], p[1][0:1], p[2][0:1]}][[3]string{"##", p[1][1:3], p[2][1:3]}]
-					posteriori /= (*pP)[[3]string{p[0][0:1], p[1][0:1], p[2][0:1]}][[3]string{"##", p[1][1:3], p[2][1:3]}]
-				} else if len(p[0]) > 3 {
-					posteriori *= (*like)[s][[3]string{p[0][0:1], p[1][0:1], p[2][0:1]}][[3]string{p[0][1:3], p[1][1:3], "##"}]
-					posteriori /= (*pP)[[3]string{p[0][0:1], p[1][0:1], p[2][0:1]}][[3]string{p[0][1:3], p[1][1:3], "##"}]
-				}
-			}
+			posteriori *= (*like)[s][[3]string{p[0][0:1], p[1][0:1], p[2][0:1]}][[3]string{p[0][1:3], p[1][1:3], p[2][1:3]}]
+			posteriori /= (*pP)[[3]string{p[0][0:1], p[1][0:1], p[2][0:1]}][[3]string{p[0][1:3], p[1][1:3], p[2][1:3]}]
 			if math.IsNaN(posteriori) {
-				posteriori = 0.0
+				posteriori = 0.001
 			}
+			if posteriori < 0.001 {
+				posteriori = 0.001
+			}
+			parcial += posteriori
 			// fmt.Println(s, posteriori)
 			(*r)[p][s] = posteriori
+		}
+		for s := range (*r)[p] {
+			(*r)[p][s] /= parcial
 		}
 	}
 }
