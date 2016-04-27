@@ -75,7 +75,7 @@ func step(previous, current, init, end *[]string, ru *rule.Rule, priorP *(map[[3
 			}
 		}
 		(*current)[c] = state
-		// if (*previous)[c-1] == "###" {
+		// if (*previous)[c] == "Aa0" && (*previous)[c+1] == "Ab0" {
 		// 	fmt.Println((*ru)[rule.Pattern{(*previous)[c-1], (*previous)[c], (*previous)[c+1]}])
 		// }
 		if state == "" || state == " " {

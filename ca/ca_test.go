@@ -10,12 +10,12 @@ import (
 )
 
 func TestRun(t *testing.T) {
-	r := rule.Read("/home/jgcarvalho/gocode/src/github.com/jgcarvalho/zeca2-opt/AAA.probs2")
+	r := rule.Read("/home/jgcarvalho/gocode/src/github.com/jgcarvalho/zeca2-opt/AAA.probs3")
 	// fmt.Println(r)
 	conf := ca.Config{
-		InitState:   []string{"###", "A??", "A??", "A??", "A??", "A??", "A??", "A??", "A??", "A??", "A??", "A??", "A??", "A??", "A??", "A??", "A??", "A??", "A??", "A??", "A??", "A??", "###"},
-		EndState:    []string{"###", "Aa0", "Aa0", "Aa0", "Aa0", "Aa0", "Aa0", "Aa0", "Aa0", "Aa0", "Ad0", "Ad0", "Ab0", "Ab0", "Ab0", "Ab0", "Ab0", "Ab0", "Ab0", "Ab0", "Ab0", "Ab0", "###"},
-		Steps:       5000,
+		InitState:   []string{"###", "A??", "A??", "A??", "A??", "A??", "A??", "A??", "A??", "A??", "A??", "A??", "A??", "###"},
+		EndState:    []string{"###", "Aa0", "Aa0", "Aa0", "Aa0", "Aa0", "Ad0", "Ad0", "Ab0", "Ab0", "Ab0", "Ab0", "Ab0", "###"},
+		Steps:       1000,
 		IgnoreSteps: 1,
 	}
 	p1 := bayes.CalcPriorStates2(conf.EndState)
@@ -28,7 +28,7 @@ func TestRun(t *testing.T) {
 	// bayes.UpdateRule(&r, &p1, &p2, &l)
 	// p2, l = conf.Run(r)
 
-	for i := 0; i < 1000; i++ {
+	for i := 0; i < 10000; i++ {
 		bayes.UpdateRule(&r, &p1, &p2, &l)
 		p2, l = conf.Run(r)
 	}
