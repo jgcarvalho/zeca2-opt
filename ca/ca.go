@@ -65,56 +65,41 @@ func step(previous, current, init, end *[]string, ru *rule.Rule, priorP *(map[[3
 	var patAA [3]string
 	var patSS [3]string
 	for c := 1; c < len(*init)-1; c++ {
-		rnd = rand.Float64()
-		for k, v := range (*ru)[rule.Pattern{(*previous)[c-1], (*previous)[c], (*previous)[c+1]}] {
-			if v > rnd {
-				state = k
-				break
-			} else {
-				rnd -= v
+		if (*previous)[c] == "###" {
+			(*current)[c] = "###"
+		} else {
+			rnd = rand.Float64()
+			for k, v := range (*ru)[rule.Pattern{(*previous)[c-1], (*previous)[c], (*previous)[c+1]}] {
+				if v > rnd {
+					state = k
+					break
+				} else {
+					rnd -= v
+				}
 			}
-		}
-		(*current)[c] = state
-		// if (*previous)[c] == "Aa0" && (*previous)[c+1] == "Ab0" {
-		// 	fmt.Println((*ru)[rule.Pattern{(*previous)[c-1], (*previous)[c], (*previous)[c+1]}])
-		// }
-		if state == "" || state == " " {
-			fmt.Println("ERRO", (*previous)[c-1], (*previous)[c], (*previous)[c+1])
-		}
-		// } else {
-		// 	fmt.Println("OK", (*previous)[c-1], (*previous)[c], (*previous)[c+1], state)
-		// }
+			(*current)[c] = state
 
-		// prior patterns probabilities
-		patAA = [3]string{(*previous)[c-1][0:1], (*previous)[c][0:1], (*previous)[c+1][0:1]}
-		patSS = [3]string{(*previous)[c-1][1:3], (*previous)[c][1:3], (*previous)[c+1][1:3]}
-		// if len((*previous)[c-1]) == 3 {
-		// 	patSS[0] = (*previous)[c-1][1:3]
-		// } else {
-		// 	patSS[0] = "##"
-		// }
-		// if len((*previous)[c]) == 3 {
-		// 	patSS[1] = (*previous)[c][1:3]
-		// } else {
-		// 	patSS[1] = "##"
-		// }
-		// if len((*previous)[c+1]) == 3 {
-		// 	patSS[2] = (*previous)[c+1][1:3]
-		// } else {
-		// 	patSS[2] = "##"
-		// }
-		if _, ok := (*priorP)[patAA]; !ok {
-			(*priorP)[patAA] = make(map[[3]string]float64)
-		}
-		(*priorP)[patAA][patSS] += 1.0
+			if state == "" || state == " " {
+				fmt.Println("ERRO", (*previous)[c-1], (*previous)[c], (*previous)[c+1])
+			}
 
-		// likelihood
-		if _, ok := (*likelihood)[(*end)[c]]; !ok {
-			(*likelihood)[(*end)[c]] = make(map[[3]string]map[[3]string]float64)
+			// prior patterns probabilities
+			patAA = [3]string{(*previous)[c-1][0:1], (*previous)[c][0:1], (*previous)[c+1][0:1]}
+			patSS = [3]string{(*previous)[c-1][1:3], (*previous)[c][1:3], (*previous)[c+1][1:3]}
+
+			if _, ok := (*priorP)[patAA]; !ok {
+				(*priorP)[patAA] = make(map[[3]string]float64)
+			}
+			(*priorP)[patAA][patSS] += 1.0
+
+			// likelihood
+			if _, ok := (*likelihood)[(*end)[c]]; !ok {
+				(*likelihood)[(*end)[c]] = make(map[[3]string]map[[3]string]float64)
+			}
+			if _, ok := (*likelihood)[(*end)[c]][patAA]; !ok {
+				(*likelihood)[(*end)[c]][patAA] = make(map[[3]string]float64)
+			}
+			(*likelihood)[(*end)[c]][patAA][patSS] += 1.0
 		}
-		if _, ok := (*likelihood)[(*end)[c]][patAA]; !ok {
-			(*likelihood)[(*end)[c]][patAA] = make(map[[3]string]float64)
-		}
-		(*likelihood)[(*end)[c]][patAA][patSS] += 1.0
 	}
 }

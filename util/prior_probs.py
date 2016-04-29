@@ -17,31 +17,6 @@ def print_rule(aa,ss,prob):
         c += 1
     print "}"
 
-def print_static_rule(aa,prob):
-    for s1 in states:
-        for s2 in states:
-            print "[ ### ][ {} ][ {} ] -> ".format(aa[1]+s1,aa[2]+s2),
-            print "{",
-            n = len(prob)
-            c = 1
-            for i in prob:
-                print "{} : {}".format(aa[1]+i, prob[i]),
-                if c != n:
-                    print ",",
-                c += 1
-            print "}"
-
-            print "[ {} ][ {} ][ ### ] -> ".format(aa[1]+s1,aa[2]+s2),
-            print "{",
-            n = len(prob)
-            c = 1
-            for i in prob:
-                print "{} : {}".format(aa[1]+i, prob[i]),
-                if c != n:
-                    print ",",
-                c += 1
-            print "}"
-
 
 def ajust_probs(probs):
     new_probs = {}
@@ -131,4 +106,3 @@ if __name__ == '__main__':
             for c in states:
                 for r in states:
                     print_rule(motif,(l,c,r), new_p)
-        print_static_rule(motif, new_p)
