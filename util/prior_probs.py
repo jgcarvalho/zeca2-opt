@@ -2,9 +2,9 @@ import math
 from sys import argv
 
 prob_basal = 0.001
-states = ["??","a0","a1","b0","d0","d1","g0","g1","z0","p0","p1"]
+states = ["**","??","a0","a1","b0","d0","d1","g0","g1","z0","p0","p1"]
 
-def print_rule(aa,ss,prob):
+def print_rule_init(aa,ss,prob):
     # p = calc_prob(ss,prob)
     print "[ {} ][ {} ][ {} ] ->".format(aa[0]+ss[0],aa[1]+ss[1],aa[2]+ss[2]),
     print "{",
@@ -18,6 +18,23 @@ def print_rule(aa,ss,prob):
     print "}"
 
 
+def print_rule_transition(aa,ss):
+    print "[ {} ][ {} ][ {} ] ->".format(aa[0]+ss[0],aa[1]+ss[1],aa[2]+ss[2]),
+    print "{",
+    n = len(states)
+    c = 1
+    for i in states:
+        if i == ss[1]:
+            print "{} : {}".format(aa[1]+i, 0.9),
+        else:
+            print "{} : {}".format(aa[1]+i, 0.1/(len(states)-1)),
+        if c != n:
+            print ",",
+        c += 1
+    print "}"
+
+
+
 def ajust_probs(probs):
     new_probs = {}
     inde = 0.0
@@ -29,7 +46,7 @@ def ajust_probs(probs):
 
     total = 0.0
     for s in states:
-        if s == "??":
+        if s == "**":
             new_probs[s] = 1.0 - inde
         else:
             new_probs[s] = probs[s]*(1.0-inde)
@@ -58,7 +75,7 @@ def ajust_probs_entropy(probs):
 
     total = 0.0
     for s in states:
-        if s == "??":
+        if s == "**":
             new_probs[s] = rel_entropy
         else:
             new_probs[s] = probs[s]*(1.0-rel_entropy)
@@ -105,4 +122,7 @@ if __name__ == '__main__':
         for l in states:
             for c in states:
                 for r in states:
-                    print_rule(motif,(l,c,r), new_p)
+                    if c[1] == "**":
+                        print_rule_init(motif,(l,c,r), new_p)
+                    else:
+                        print_rule_transition(motif, (l,c,r))

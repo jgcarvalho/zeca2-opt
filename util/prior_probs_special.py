@@ -1,9 +1,10 @@
 from sys import argv
 aa = ['A','C','D','E','F','G','H','I','K','L','M','N','P','Q','R','S','T','V','Y','W']
-states = ["??","a0","a1","b0","d0","d1","g0","g1","z0","p0","p1"]
+states = ["**","??","a0","a1","b0","d0","d1","g0","g1","z0","p0","p1"]
 
 begin_rules = {}
 end_rules = {}
+
 def init_special_rules():
     for i in aa:
         for j in aa:
@@ -16,17 +17,17 @@ def calc_special_rules(fn):
     with open(fn) as f:
         for l in f:
             d = l.strip().split()
-            for i in range(9,51,4):
+            for i in range(9,55,4):
                 if d[i] in begin_rules[("###",d[3],d[5])].keys():
-                    begin_rules[("###",d[3],d[5])][d[i]] += float(d[i+2])/220
+                    begin_rules[("###",d[3],d[5])][d[i]] += float(d[i+2])/240
 
                 else:
-                    begin_rules[("###",d[3],d[5])][d[i]] = float(d[i+2])/220
+                    begin_rules[("###",d[3],d[5])][d[i]] = float(d[i+2])/240
 
                 if d[i] in end_rules[(d[1],d[3],"###")].keys():
-                    end_rules[(d[1],d[3],"###")][d[i]] += float(d[i+2])/220
+                    end_rules[(d[1],d[3],"###")][d[i]] += float(d[i+2])/240
                 else:
-                    end_rules[(d[1],d[3],"###")][d[i]] = float(d[i+2])/220
+                    end_rules[(d[1],d[3],"###")][d[i]] = float(d[i+2])/240
 
 def normalize_special_rules():
     for i in begin_rules:
