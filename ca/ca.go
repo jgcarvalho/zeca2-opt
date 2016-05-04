@@ -76,6 +76,11 @@ func step(previous, current, init, end *[]string, ru *rule.Rule, priorP *(map[[3
 				} else {
 					rnd -= v
 				}
+				// parece que a somatoria de v não dá 1.0 sempre (preciso corrigir)
+				// isso resulta em estado "", para resolver TEMPORARIAMENTE damos um state qualquer (nesse caso o primeiro)
+				if state == "" {
+					state = k
+				}
 			}
 			(*current)[c] = state
 

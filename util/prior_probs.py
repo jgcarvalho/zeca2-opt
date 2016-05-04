@@ -122,7 +122,7 @@ if __name__ == '__main__':
         for l in states:
             for c in states:
                 for r in states:
-                    if c[1] == "**":
+                    if c == "**":
                         print_rule_init(motif,(l,c,r), new_p)
                     else:
                         print_rule_transition(motif, (l,c,r))
